@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./Categories.module.css";
 
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-  fetchProducts,
   selectProducts,
   selectLoading,
   selectError,
@@ -24,20 +23,14 @@ function Categories() {
 
   const selectedCategories = useSelector(selectSelectedCategories);
 
-  useEffect(() => {
-    if (products.length === 0) {
-      dispatch(fetchProducts());
-    }
-  }, [dispatch, products.length]);
-
-  const categories = [...new Set(products.map((p) => p.category))];
+  const categories = [...new Set(products.map((product) => product.category))];
 
   if (loading) {
     return <h2>Loading Categories...</h2>;
   }
 
   if (error) {
-    return <h2>{error}</h2>;
+    return <h2>Error: {error}</h2>;
   }
 
   return (

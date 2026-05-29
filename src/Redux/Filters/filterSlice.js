@@ -41,10 +41,12 @@ const filterSlice = createSlice({
 });
 
 // Actions
+
 export const { setSearchText, setMaxPrice, toggleCategory, clearFilters } =
   filterSlice.actions;
 
 // Selectors
+
 export const selectSearchText = (state) => state.filters.searchText;
 
 export const selectMaxPrice = (state) => state.filters.maxPrice;
@@ -53,4 +55,5 @@ export const selectSelectedCategories = (state) =>
   state.filters.selectedCategories;
 
 // Reducer
+
 export default filterSlice.reducer;

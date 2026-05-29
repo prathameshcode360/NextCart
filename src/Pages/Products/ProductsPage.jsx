@@ -4,42 +4,32 @@ import { FaHeart } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-  fetchProducts,
-  selectProducts,
+  selectFilteredProducts,
   selectLoading,
   selectError,
 } from "../../Redux/Products/productSlice";
 
-import {
-  setMaxPrice,
-  selectMaxPrice,
-  selectSearchText,
-  selectSelectedCategories,
-} from "../../Redux/Filters/filterSlice";
+import { setMaxPrice, selectMaxPrice } from "../../Redux/Filters/filterSlice";
+
+import Pagination from "../../Components/Pagination/Pagination";
 
 function ProductsPage() {
   const dispatch = useDispatch();
 
-  const products = useSelector(selectProducts);
+  const filteredProducts = useSelector(selectFilteredProducts);
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);
 
   const maxPrice = useSelector(selectMaxPrice);
-  const searchText = useSelector(selectSearchText);
-  const selectedCategories = useSelector(selectSelectedCategories);
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
 
-  useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
-
-  // Reset page when filters change
+  // Reset page whenever filtered products change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchText, maxPrice, selectedCategories]);
+  }, [filteredProducts]);
 
   if (loading) {
     return <h2>Loading Products...</h2>;
@@ -49,22 +39,8 @@ function ProductsPage() {
     return <h2>Error: {error}</h2>;
   }
 
-  // Filter Logic
-  const filteredProducts = products.filter((product) => {
-    const matchSearch = product.title
-      .toLowerCase()
-      .includes(searchText.toLowerCase());
-
-    const matchPrice = product.price <= maxPrice;
-
-    const matchCategory =
-      selectedCategories.length === 0 ||
-      selectedCategories.includes(product.category);
-
-    return matchSearch && matchPrice && matchCategory;
-  });
-
   // Pagination Logic
+
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
   const startIndex = (currentPage - 1) * productsPerPage;
@@ -74,17 +50,15 @@ function ProductsPage() {
     startIndex + productsPerPage,
   );
 
-  const pageNumbers = [];
-
-  if (totalPages > 0) {
-    for (let i = 1; i <= totalPages; i++) {
-      pageNumbers.push(i);
-    }
-  }
+  const pageNumbers = Array.from(
+    { length: totalPages },
+    (_, index) => index + 1,
+  );
 
   return (
     <section className={styles.productsPage}>
       {/* Filters Section */}
+
       <div className={styles.priceFilter}>
         <p>Max Price: ${maxPrice}</p>
 
@@ -98,6 +72,7 @@ function ProductsPage() {
       </div>
 
       {/* Products Section */}
+
       <div className={styles.container}>
         <h2>All Products</h2>
 
@@ -107,19 +82,16 @@ function ProductsPage() {
           ) : (
             selectedProducts.map((product) => (
               <div key={product.id} className={styles.productCard}>
-                {/* Wishlist Button */}
                 <button className={styles.wishlistBtn}>
                   <FaHeart />
                 </button>
 
-                {/* Product Image */}
                 <img
                   src={product.thumbnail}
                   alt={product.title}
                   loading="lazy"
                 />
 
-                {/* Product Info */}
                 <div className={styles.productInfo}>
                   <h3>{product.title}</h3>
 
@@ -132,30 +104,13 @@ function ProductsPage() {
           )}
         </div>
 
-        {/* Pagination */}
         {totalPages > 0 && (
-          <div className={styles.pagination}>
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((prev) => prev - 1)}>
-              Previous
-            </button>
-
-            {pageNumbers.map((page) => (
-              <button
-                key={page}
-                onClick={() => setCurrentPage(page)}
-                className={currentPage === page ? styles.activePage : ""}>
-                {page}
-              </button>
-            ))}
-
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage((prev) => prev + 1)}>
-              Next
-            </button>
-          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            pageNumbers={pageNumbers}
+            onPageChange={setCurrentPage}
+          />
         )}
       </div>
     </section>

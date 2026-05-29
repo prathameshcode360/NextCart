@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./Navbar.module.css";
 import logo from "../../assets/logo.png";
 import { Link, Outlet } from "react-router-dom";
@@ -9,10 +9,22 @@ import {
   selectSearchText,
 } from "../../Redux/Filters/filterSlice";
 
+import {
+  fetchProducts,
+  selectProducts,
+} from "../../Redux/Products/productSlice";
+
 function Navbar() {
   const dispatch = useDispatch();
 
   const searchText = useSelector(selectSearchText);
+  const products = useSelector(selectProducts);
+
+  useEffect(() => {
+    if (products.length === 0) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, products.length]);
 
   return (
     <>

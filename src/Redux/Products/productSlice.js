@@ -1,4 +1,8 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  createSelector,
+} from "@reduxjs/toolkit";
 
 // Fetch Products
 
@@ -51,13 +55,39 @@ const productsSlice = createSlice({
   },
 });
 
-// Selectors
+// Basic Selectors
 
 export const selectProducts = (state) => state.products.products;
 
 export const selectLoading = (state) => state.products.loading;
 
 export const selectError = (state) => state.products.error;
+
+// Filtered Products Selector
+
+export const selectFilteredProducts = createSelector(
+  [
+    selectProducts,
+    (state) => state.filters.searchText,
+    (state) => state.filters.maxPrice,
+    (state) => state.filters.selectedCategories,
+  ],
+  (products, searchText, maxPrice, selectedCategories) => {
+    return products.filter((product) => {
+      const matchSearch = product.title
+        .toLowerCase()
+        .includes(searchText.toLowerCase());
+
+      const matchPrice = product.price <= maxPrice;
+
+      const matchCategory =
+        selectedCategories.length === 0 ||
+        selectedCategories.includes(product.category);
+
+      return matchSearch && matchPrice && matchCategory;
+    });
+  },
+);
 
 // Reducer
 
