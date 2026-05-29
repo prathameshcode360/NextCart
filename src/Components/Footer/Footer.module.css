@@ -1,0 +1,55 @@
+.footer {
+  background: var(--black);
+  color: var(--white);
+  margin-top: 5rem;
+}
+
+.container {
+  max-width: var(--container-width);
+  margin: auto;
+
+  padding: 4rem 2rem;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.footerBrand h2,
+.footerLinks h3,
+.footerContact h3 {
+  margin-bottom: 1rem;
+}
+
+.footerBrand p,
+.footerContact p {
+  color: #d1d5db;
+  line-height: 1.6;
+}
+
+.footerLinks ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.footerLinks li {
+  color: #d1d5db;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.footerLinks li:hover {
+  color: var(--primary-light);
+}
+
+.bottomBar {
+  text-align: center;
+  padding: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bottomBar p {
+  font-size: 0.9rem;
+  color: #d1d5db;
+}

@@ -1,0 +1,111 @@
+.featuredProducts {
+  padding: 5rem 2rem;
+}
+
+.container {
+  max-width: var(--container-width);
+  margin: auto;
+}
+
+.container h2 {
+  text-align: center;
+  color: var(--black);
+  font-size: 2rem;
+  margin-bottom: 3rem;
+}
+
+/* 4 cards per row */
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.productCard {
+  position: relative;
+  background: var(--white);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: 0.3s ease;
+}
+
+.productCard:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Wishlist */
+.wishlistBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+
+  width: 38px;
+  height: 38px;
+
+  border-radius: 50%;
+  background: var(--white);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: var(--shadow-sm);
+  z-index: 2;
+}
+
+.wishlistBtn svg {
+  color: #ff4d6d;
+  font-size: 1rem;
+}
+
+/* Reduced image height */
+.productCard img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.productInfo {
+  padding: 1rem;
+}
+
+.productInfo h3 {
+  font-size: 1rem;
+  color: var(--black);
+  margin-bottom: 0.5rem;
+}
+
+.productInfo p {
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.cartBtn {
+  width: 100%;
+  padding: 0.7rem;
+  background: var(--primary);
+  color: var(--white);
+  border-radius: 8px;
+  transition: 0.3s ease;
+}
+
+.cartBtn:hover {
+  background: var(--primary-light);
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+  .productGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+  .productGrid {
+    grid-template-columns: 1fr;
+  }
+}

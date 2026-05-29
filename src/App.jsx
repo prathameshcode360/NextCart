@@ -1,9 +1,24 @@
 import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Navbar from "./Components/Navbar/Navbar";
+import HomePage from "./Pages/Home/HomePage";
 
 function App() {
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Navbar />,
+      children: [
+        {
+          index: true,
+          element: <HomePage />,
+        },
+      ],
+    },
+  ]);
   return (
     <div>
-      <h1>Next Cart </h1>
+      <RouterProvider router={router} />
     </div>
   );
 }

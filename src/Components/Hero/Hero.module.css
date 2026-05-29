@@ -1,0 +1,97 @@
+.hero {
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+}
+
+/* Container */
+.heroContainer {
+  max-width: var(--container-width);
+  margin: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+/* Left Content */
+.heroContent {
+  flex: 1;
+}
+
+.heroContent h1 {
+  font-size: 3rem;
+  color: var(--black);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.heroContent h1 span {
+  color: var(--primary);
+}
+
+.heroContent p {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  color: var(--text);
+}
+
+/* Buttons */
+.heroButtons {
+  display: flex;
+  gap: 1rem;
+}
+
+.primaryBtn {
+  background-color: var(--primary);
+  color: var(--white);
+  padding: 0.8rem 1.6rem;
+  border-radius: 8px;
+  transition: 0.3s ease;
+}
+
+.primaryBtn:hover {
+  background-color: var(--primary-light);
+}
+
+.secondaryBtn {
+  background-color: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  padding: 0.8rem 1.6rem;
+  border-radius: 8px;
+  transition: 0.3s ease;
+}
+
+.secondaryBtn:hover {
+  background-color: var(--primary);
+  color: var(--white);
+}
+
+/* Right Image */
+.heroImage {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.heroImage img {
+  max-width: 400px;
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .heroContainer {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .heroContent h1 {
+    font-size: 2.2rem;
+  }
+
+  .heroButtons {
+    justify-content: center;
+  }
+}
