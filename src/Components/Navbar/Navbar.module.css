@@ -136,3 +136,39 @@
   height: 100%;
   object-fit: cover;
 }
+
+/* Search Suggestions */
+
+.suggestions {
+  position: absolute;
+
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+
+  background: white;
+
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  overflow: hidden;
+
+  z-index: 2000;
+}
+
+.suggestionItem {
+  padding: 0.9rem 1rem;
+
+  cursor: pointer;
+
+  font-size: 0.95rem;
+  color: var(--text);
+
+  transition: background-color 0.2s ease;
+}
+
+.suggestionItem:hover {
+  background-color: var(--bg-primary);
+}

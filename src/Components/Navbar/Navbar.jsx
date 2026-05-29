@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styles from "./Navbar.module.css";
 import logo from "../../assets/logo.png";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -12,19 +12,55 @@ import {
 import {
   fetchProducts,
   selectProducts,
+  selectSearchSuggestions,
 } from "../../Redux/Products/productSlice";
 
 function Navbar() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const searchText = useSelector(selectSearchText);
   const products = useSelector(selectProducts);
+  const suggestions = useSelector(selectSearchSuggestions);
 
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const searchRef = useRef(null);
+
+  // Fetch Products Once
   useEffect(() => {
     if (products.length === 0) {
       dispatch(fetchProducts());
     }
   }, [dispatch, products.length]);
+
+  // Close Suggestions When Clicking Outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleSearchChange = (e) => {
+    dispatch(setSearchText(e.target.value));
+    setShowSuggestions(true);
+  };
+
+  const handleSuggestionClick = (productTitle) => {
+    dispatch(setSearchText(productTitle));
+
+    setShowSuggestions(false);
+
+    navigate("/products");
+  };
 
   return (
     <>
@@ -54,13 +90,27 @@ function Navbar() {
         </div>
 
         {/* Search */}
-        <div className={styles.navSearch}>
+        <div className={styles.navSearch} ref={searchRef}>
           <input
             type="text"
             placeholder="Search products..."
             value={searchText}
-            onChange={(e) => dispatch(setSearchText(e.target.value))}
+            onFocus={() => setShowSuggestions(true)}
+            onChange={handleSearchChange}
           />
+
+          {showSuggestions && searchText.trim() && suggestions.length > 0 && (
+            <div className={styles.suggestions}>
+              {suggestions.map((product) => (
+                <div
+                  key={product.id}
+                  className={styles.suggestionItem}
+                  onClick={() => handleSuggestionClick(product.title)}>
+                  {product.title}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Actions */}

@@ -89,6 +89,23 @@ export const selectFilteredProducts = createSelector(
   },
 );
 
+// Search Suggestions Selector
+
+export const selectSearchSuggestions = createSelector(
+  [selectProducts, (state) => state.filters.searchText],
+  (products, searchText) => {
+    if (!searchText.trim()) {
+      return [];
+    }
+
+    return products
+      .filter((product) =>
+        product.title.toLowerCase().includes(searchText.toLowerCase()),
+      )
+      .slice(0, 5);
+  },
+);
+
 // Reducer
 
 export default productsSlice.reducer;
