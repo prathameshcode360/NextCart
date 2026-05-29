@@ -2,8 +2,18 @@ import React from "react";
 import styles from "./Navbar.module.css";
 import logo from "../../assets/logo.png";
 import { Link, Outlet } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  setSearchText,
+  selectSearchText,
+} from "../../Redux/Filters/filterSlice";
 
 function Navbar() {
+  const dispatch = useDispatch();
+
+  const searchText = useSelector(selectSearchText);
+
   return (
     <>
       <nav className={styles.navbar}>
@@ -18,15 +28,27 @@ function Navbar() {
             <li>
               <Link to="/">Home</Link>
             </li>
-            <li>Products</li>
-            <li>Categories</li>
+
+            <li>
+              <Link to="/products">Products</Link>
+            </li>
+
+            <li>
+              <Link to="/categories">Categories</Link>
+            </li>
+
             <li>Contact</li>
           </ul>
         </div>
 
         {/* Search */}
         <div className={styles.navSearch}>
-          <input type="text" placeholder="Search products..." />
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchText}
+            onChange={(e) => dispatch(setSearchText(e.target.value))}
+          />
         </div>
 
         {/* Actions */}
@@ -48,6 +70,7 @@ function Navbar() {
           </div>
         </div>
       </nav>
+
       <Outlet />
     </>
   );
