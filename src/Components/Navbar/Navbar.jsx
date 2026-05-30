@@ -22,6 +22,8 @@ import { selectIsAuthenticated, selectUser } from "../../Redux/Auth/authSlice";
 
 import { selectWishlistCount } from "../../Redux/Wishlist/wishlistSlice";
 
+import { selectCartCount } from "../../Redux/Cart/cartSlice";
+
 function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -34,6 +36,7 @@ function Navbar() {
   const user = useSelector(selectUser);
 
   const wishlistCount = useSelector(selectWishlistCount);
+  const cartCount = useSelector(selectCartCount);
 
   const [showSuggestions, setShowSuggestions] = useState(false);
 
@@ -74,6 +77,16 @@ function Navbar() {
     navigate("/products");
   };
 
+  const handleOrdersClick = () => {
+    if (!isAuthenticated) {
+      alert("Please login to view orders");
+      navigate("/login");
+      return;
+    }
+
+    navigate("/orders");
+  };
+
   const handleWishlistClick = () => {
     if (!isAuthenticated) {
       alert("Please login to view wishlist");
@@ -82,6 +95,16 @@ function Navbar() {
     }
 
     navigate("/wishlist");
+  };
+
+  const handleCartClick = () => {
+    if (!isAuthenticated) {
+      alert("Please login to view cart");
+      navigate("/login");
+      return;
+    }
+
+    navigate("/cart");
   };
 
   const handleLogout = async () => {
@@ -148,11 +171,11 @@ function Navbar() {
             {wishlistCount > 0 && <span>{wishlistCount}</span>}
           </button>
 
-          <button>Orders</button>
+          <button onClick={handleOrdersClick}>Orders</button>
 
-          <button>
+          <button onClick={handleCartClick}>
             Cart
-            <span>0</span>
+            {cartCount > 0 && <span>{cartCount}</span>}
           </button>
 
           {isAuthenticated ? (

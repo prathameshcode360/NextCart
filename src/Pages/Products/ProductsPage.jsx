@@ -29,7 +29,7 @@ import {
 import { selectUser, selectIsAuthenticated } from "../../Redux/Auth/authSlice";
 
 import Pagination from "../../Components/Pagination/Pagination";
-
+import { addToCart } from "../../Redux/Cart/cartSlice";
 function ProductsPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -83,6 +83,21 @@ function ProductsPage() {
         }),
       );
     }
+  };
+
+  const handleAddToCart = (product) => {
+    if (!isAuthenticated) {
+      alert("Please login to use cart");
+      navigate("/login");
+      return;
+    }
+
+    dispatch(
+      addToCart({
+        uid: user.uid,
+        product,
+      }),
+    );
   };
 
   if (loading) {
@@ -183,7 +198,11 @@ function ProductsPage() {
 
                       <p className={styles.price}>${product.price}</p>
 
-                      <button className={styles.cartBtn}>Add To Cart</button>
+                      <button
+                        className={styles.cartBtn}
+                        onClick={() => handleAddToCart(product)}>
+                        Add To Cart
+                      </button>
                     </div>
                   </div>
                 );

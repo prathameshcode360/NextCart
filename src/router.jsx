@@ -5,6 +5,8 @@ import Navbar from "./Components/Navbar/Navbar";
 import HomePage from "./Pages/Home/HomePage";
 import ProductsPage from "./Pages/Products/ProductsPage";
 import WishlistPage from "./Pages/Wishlist/WishlistPage";
+import CartPage from "./Pages/Cart/CartPage";
+import OrdersPage from "./Pages/Orders/OrdersPage";
 import LoginPage from "./Pages/Login/LoginPage";
 import RegisterPage from "./Pages/Register/RegisterPage";
 import ProfilePage from "./Pages/Profile/ProfilePage";
@@ -29,6 +31,22 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <WishlistPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "cart",
+        element: (
+          <ProtectedRoute>
+            <CartPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "orders",
+        element: (
+          <ProtectedRoute>
+            <OrdersPage />
           </ProtectedRoute>
         ),
       },

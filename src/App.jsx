@@ -11,6 +11,8 @@ import { auth } from "./Firebase/firebase";
 import { setUser, clearUser } from "./Redux/Auth/authSlice";
 
 import { fetchWishlist } from "./Redux/Wishlist/wishlistSlice";
+import { fetchCart } from "./Redux/Cart/cartSlice";
+import { fetchOrders } from "./Redux/Orders/ordersSlice";
 
 function AppContent() {
   const dispatch = useDispatch();
@@ -29,6 +31,12 @@ function AppContent() {
 
         // Load wishlist after login
         dispatch(fetchWishlist(user.uid));
+
+        // Load cart after login
+        dispatch(fetchCart(user.uid));
+
+        // Load orders after login
+        dispatch(fetchOrders(user.uid));
       } else {
         dispatch(clearUser());
       }
