@@ -64,21 +64,21 @@ export const selectLoading = (state) => state.products.loading;
 export const selectError = (state) => state.products.error;
 
 // Filtered Products Selector
-
 export const selectFilteredProducts = createSelector(
   [
     selectProducts,
     (state) => state.filters.searchText,
+    (state) => state.filters.minPrice,
     (state) => state.filters.maxPrice,
     (state) => state.filters.selectedCategories,
   ],
-  (products, searchText, maxPrice, selectedCategories) => {
+  (products, searchText, minPrice, maxPrice, selectedCategories) => {
     return products.filter((product) => {
       const matchSearch = product.title
         .toLowerCase()
         .includes(searchText.toLowerCase());
 
-      const matchPrice = product.price <= maxPrice;
+      const matchPrice = product.price >= minPrice && product.price <= maxPrice;
 
       const matchCategory =
         selectedCategories.length === 0 ||

@@ -4,23 +4,36 @@ import { FaHeart } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
+  selectProducts,
   selectFilteredProducts,
   selectLoading,
   selectError,
 } from "../../Redux/Products/productSlice";
 
-import { setMaxPrice, selectMaxPrice } from "../../Redux/Filters/filterSlice";
+import {
+  setMinPrice,
+  setMaxPrice,
+  toggleCategory,
+  selectMinPrice,
+  selectMaxPrice,
+  selectSelectedCategories,
+} from "../../Redux/Filters/filterSlice";
 
 import Pagination from "../../Components/Pagination/Pagination";
 
 function ProductsPage() {
   const dispatch = useDispatch();
 
+  const products = useSelector(selectProducts);
   const filteredProducts = useSelector(selectFilteredProducts);
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);
 
+  const minPrice = useSelector(selectMinPrice);
   const maxPrice = useSelector(selectMaxPrice);
+  const selectedCategories = useSelector(selectSelectedCategories);
+
+  const categories = [...new Set(products.map((product) => product.category))];
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
@@ -40,7 +53,6 @@ function ProductsPage() {
   }
 
   // Pagination Logic
-
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
   const startIndex = (currentPage - 1) * productsPerPage;
@@ -57,61 +69,88 @@ function ProductsPage() {
 
   return (
     <section className={styles.productsPage}>
-      {/* Filters Section */}
+      <div className={styles.layout}>
+        {/* Sidebar */}
+        <aside className={styles.sidebar}>
+          <h3>Filters</h3>
 
-      <div className={styles.priceFilter}>
-        <p>Max Price: ${maxPrice}</p>
+          <div className={styles.filterSection}>
+            <h4>Categories</h4>
 
-        <input
-          type="range"
-          min="0"
-          max="1000"
-          value={maxPrice}
-          onChange={(e) => dispatch(setMaxPrice(Number(e.target.value)))}
-        />
-      </div>
-
-      {/* Products Section */}
-
-      <div className={styles.container}>
-        <h2>All Products</h2>
-
-        <div className={styles.productGrid}>
-          {selectedProducts.length === 0 ? (
-            <h3>No Products Found</h3>
-          ) : (
-            selectedProducts.map((product) => (
-              <div key={product.id} className={styles.productCard}>
-                <button className={styles.wishlistBtn}>
-                  <FaHeart />
-                </button>
-
-                <img
-                  src={product.thumbnail}
-                  alt={product.title}
-                  loading="lazy"
+            {categories.map((category) => (
+              <label key={category} className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={selectedCategories.includes(category)}
+                  onChange={() => dispatch(toggleCategory(category))}
                 />
+                {category}
+              </label>
+            ))}
+          </div>
 
-                <div className={styles.productInfo}>
-                  <h3>{product.title}</h3>
+          <div className={styles.filterSection}>
+            <h4>Price Range</h4>
 
-                  <p className={styles.price}>${product.price}</p>
+            <div className={styles.priceInputs}>
+              <input
+                type="number"
+                placeholder="Min Price"
+                value={minPrice}
+                onChange={(e) => dispatch(setMinPrice(Number(e.target.value)))}
+              />
 
-                  <button className={styles.cartBtn}>Add To Cart</button>
+              <input
+                type="number"
+                placeholder="Max Price"
+                value={maxPrice}
+                onChange={(e) => dispatch(setMaxPrice(Number(e.target.value)))}
+              />
+            </div>
+          </div>
+        </aside>
+
+        {/* Products */}
+        <div className={styles.container}>
+          <h2>All Products</h2>
+
+          <div className={styles.productGrid}>
+            {selectedProducts.length === 0 ? (
+              <h3>No Products Found</h3>
+            ) : (
+              selectedProducts.map((product) => (
+                <div key={product.id} className={styles.productCard}>
+                  <button className={styles.wishlistBtn}>
+                    <FaHeart />
+                  </button>
+
+                  <img
+                    src={product.thumbnail}
+                    alt={product.title}
+                    loading="lazy"
+                  />
+
+                  <div className={styles.productInfo}>
+                    <h3>{product.title}</h3>
+
+                    <p className={styles.price}>${product.price}</p>
+
+                    <button className={styles.cartBtn}>Add To Cart</button>
+                  </div>
                 </div>
-              </div>
-            ))
+              ))
+            )}
+          </div>
+
+          {totalPages > 0 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              pageNumbers={pageNumbers}
+              onPageChange={setCurrentPage}
+            />
           )}
         </div>
-
-        {totalPages > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            pageNumbers={pageNumbers}
-            onPageChange={setCurrentPage}
-          />
-        )}
       </div>
     </section>
   );
