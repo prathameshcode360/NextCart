@@ -1,0 +1,81 @@
+.loginContainer {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.loginCard {
+  width: 100%;
+  max-width: 420px;
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+}
+
+.heading {
+  text-align: center;
+  color: var(--black);
+  margin-bottom: 1.5rem;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--black);
+  font-weight: 500;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.formGroup input:focus {
+  border-color: var(--primary);
+}
+
+.loginBtn {
+  width: 100%;
+  padding: 0.9rem;
+  background: var(--primary);
+  color: var(--white);
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.loginBtn:hover {
+  background: var(--primary-light);
+}
+
+.divider {
+  text-align: center;
+  margin: 1.2rem 0;
+  color: var(--text);
+}
+
+.googleBtn {
+  width: 100%;
+  padding: 0.9rem;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-weight: 600;
+  color: var(--black);
+  transition: all 0.3s ease;
+}
+
+.googleBtn:hover {
+  box-shadow: var(--shadow-sm);
+}

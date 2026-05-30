@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./ProductsPage.module.css";
 import { FaHeart } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import {
   selectProducts,
@@ -19,10 +20,19 @@ import {
   selectSelectedCategories,
 } from "../../Redux/Filters/filterSlice";
 
+import {
+  addToWishlist,
+  removeFromWishlist,
+  selectWishlistItems,
+} from "../../Redux/Wishlist/wishlistSlice";
+
+import { selectUser, selectIsAuthenticated } from "../../Redux/Auth/authSlice";
+
 import Pagination from "../../Components/Pagination/Pagination";
 
 function ProductsPage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const products = useSelector(selectProducts);
   const filteredProducts = useSelector(selectFilteredProducts);
@@ -32,6 +42,11 @@ function ProductsPage() {
   const minPrice = useSelector(selectMinPrice);
   const maxPrice = useSelector(selectMaxPrice);
   const selectedCategories = useSelector(selectSelectedCategories);
+
+  const wishlistItems = useSelector(selectWishlistItems);
+
+  const user = useSelector(selectUser);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   const categories = [...new Set(products.map((product) => product.category))];
 
@@ -43,6 +58,32 @@ function ProductsPage() {
   useEffect(() => {
     setCurrentPage(1);
   }, [filteredProducts]);
+
+  const handleWishlistToggle = (product) => {
+    if (!isAuthenticated) {
+      alert("Please login to use wishlist");
+      navigate("/login");
+      return;
+    }
+
+    const exists = wishlistItems.some((item) => item.id === product.id);
+
+    if (exists) {
+      dispatch(
+        removeFromWishlist({
+          uid: user.uid,
+          productId: product.id,
+        }),
+      );
+    } else {
+      dispatch(
+        addToWishlist({
+          uid: user.uid,
+          product,
+        }),
+      );
+    }
+  };
 
   if (loading) {
     return <h2>Loading Products...</h2>;
@@ -118,27 +159,35 @@ function ProductsPage() {
             {selectedProducts.length === 0 ? (
               <h3>No Products Found</h3>
             ) : (
-              selectedProducts.map((product) => (
-                <div key={product.id} className={styles.productCard}>
-                  <button className={styles.wishlistBtn}>
-                    <FaHeart />
-                  </button>
+              selectedProducts.map((product) => {
+                const isWishlisted = wishlistItems.some(
+                  (item) => item.id === product.id,
+                );
 
-                  <img
-                    src={product.thumbnail}
-                    alt={product.title}
-                    loading="lazy"
-                  />
+                return (
+                  <div key={product.id} className={styles.productCard}>
+                    <button
+                      className={styles.wishlistBtn}
+                      onClick={() => handleWishlistToggle(product)}>
+                      <FaHeart color={isWishlisted ? "red" : "#ccc"} />
+                    </button>
 
-                  <div className={styles.productInfo}>
-                    <h3>{product.title}</h3>
+                    <img
+                      src={product.thumbnail}
+                      alt={product.title}
+                      loading="lazy"
+                    />
 
-                    <p className={styles.price}>${product.price}</p>
+                    <div className={styles.productInfo}>
+                      <h3>{product.title}</h3>
 
-                    <button className={styles.cartBtn}>Add To Cart</button>
+                      <p className={styles.price}>${product.price}</p>
+
+                      <button className={styles.cartBtn}>Add To Cart</button>
+                    </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
 

@@ -3,6 +3,9 @@ import styles from "./Navbar.module.css";
 import logo from "../../assets/logo.png";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { signOut } from "firebase/auth";
+
+import { auth } from "../../Firebase/firebase";
 
 import {
   setSearchText,
@@ -15,6 +18,10 @@ import {
   selectSearchSuggestions,
 } from "../../Redux/Products/productSlice";
 
+import { selectIsAuthenticated, selectUser } from "../../Redux/Auth/authSlice";
+
+import { selectWishlistCount } from "../../Redux/Wishlist/wishlistSlice";
+
 function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -22,6 +29,11 @@ function Navbar() {
   const searchText = useSelector(selectSearchText);
   const products = useSelector(selectProducts);
   const suggestions = useSelector(selectSearchSuggestions);
+
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const user = useSelector(selectUser);
+
+  const wishlistCount = useSelector(selectWishlistCount);
 
   const [showSuggestions, setShowSuggestions] = useState(false);
 
@@ -60,6 +72,26 @@ function Navbar() {
     setShowSuggestions(false);
 
     navigate("/products");
+  };
+
+  const handleWishlistClick = () => {
+    if (!isAuthenticated) {
+      alert("Please login to view wishlist");
+      navigate("/login");
+      return;
+    }
+
+    navigate("/wishlist");
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -111,7 +143,10 @@ function Navbar() {
 
         {/* Actions */}
         <div className={styles.navActions}>
-          <button>Wishlist</button>
+          <button onClick={handleWishlistClick}>
+            Wishlist
+            {wishlistCount > 0 && <span>{wishlistCount}</span>}
+          </button>
 
           <button>Orders</button>
 
@@ -120,12 +155,21 @@ function Navbar() {
             <span>0</span>
           </button>
 
-          <div className={styles.profile}>
-            <img
-              src="https://cdn-icons-png.flaticon.com/128/1144/1144709.png"
-              alt="profile"
-            />
-          </div>
+          {isAuthenticated ? (
+            <>
+              <button onClick={() => navigate("/profile")}>
+                {user?.displayName || "Profile"}
+              </button>
+
+              <button onClick={handleLogout}>Logout</button>
+            </>
+          ) : (
+            <>
+              <button onClick={() => navigate("/login")}>Login</button>
+
+              <button onClick={() => navigate("/register")}>Register</button>
+            </>
+          )}
         </div>
       </nav>
 
