@@ -19,6 +19,8 @@ import {
 
 import { selectUser, selectIsAuthenticated } from "../../Redux/Auth/authSlice";
 
+import { addToCart } from "../../Redux/Cart/cartSlice";
+
 function FeaturedProducts() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -60,9 +62,28 @@ function FeaturedProducts() {
     }
   };
 
-  if (loading) return <h2>Loading...</h2>;
+  const handleAddToCart = (product) => {
+    if (!isAuthenticated) {
+      alert("Please login to use cart");
+      navigate("/login");
+      return;
+    }
 
-  if (error) return <h2>{error}</h2>;
+    dispatch(
+      addToCart({
+        uid: user.uid,
+        product,
+      }),
+    );
+  };
+
+  if (loading) {
+    return <h2>Loading Products...</h2>;
+  }
+
+  if (error) {
+    return <h2>Error: {error}</h2>;
+  }
 
   return (
     <section className={styles.featuredProducts}>
@@ -83,14 +104,22 @@ function FeaturedProducts() {
                   <FaHeart color={isWishlisted ? "red" : "#ccc"} />
                 </button>
 
-                <img src={product.thumbnail} alt={product.title} />
+                <img
+                  src={product.thumbnail}
+                  alt={product.title}
+                  loading="lazy"
+                />
 
                 <div className={styles.productInfo}>
                   <h3>{product.title}</h3>
 
-                  <p>${product.price}</p>
+                  <p className={styles.price}>${product.price}</p>
 
-                  <button className={styles.cartBtn}>Add to Cart</button>
+                  <button
+                    className={styles.cartBtn}
+                    onClick={() => handleAddToCart(product)}>
+                    Add To Cart
+                  </button>
                 </div>
               </div>
             );

@@ -1,8 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./Hero.module.css";
 import heroImg from "../../assets/hero.png";
 
 function Hero() {
+  const navigate = useNavigate();
+
   return (
     <section className={styles.hero}>
       <div className={styles.heroContainer}>
@@ -18,8 +21,17 @@ function Hero() {
           </p>
 
           <div className={styles.heroButtons}>
-            <button className={styles.primaryBtn}>Shop Now</button>
-            <button className={styles.secondaryBtn}>Explore</button>
+            <button
+              className={styles.primaryBtn}
+              onClick={() => navigate("/products")}>
+              Shop Now
+            </button>
+
+            {/* <button
+              className={styles.secondaryBtn}
+              onClick={() => navigate("/products")}>
+              Explore
+            </button> */}
           </div>
         </div>
 

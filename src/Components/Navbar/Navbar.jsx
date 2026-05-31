@@ -136,7 +136,9 @@ function Navbar() {
               <Link to="/products">Products</Link>
             </li>
 
-            <li>Contact</li>
+            <li>
+              <Link to="/contact">Contact</Link>
+            </li>
           </ul>
         </div>
 
