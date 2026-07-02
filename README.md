@@ -45,7 +45,7 @@ NextCart is a modern and responsive **E-Commerce Web Application** built with **
 ### Clone the repository
 
 ```bash
-git clone https://github.com/your-username/nextcart.git
+git clone https://github.com/prathameshcode360/NextCart.git
 ```
 
 ### Navigate to project folder
